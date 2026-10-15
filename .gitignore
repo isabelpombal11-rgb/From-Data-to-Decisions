@@ -1,0 +1,5 @@
+# Generated database (rebuild with: python datasets/generate_data.py)
+*.db
+__pycache__/
+.ipynb_checkpoints/
+.DS_Store
