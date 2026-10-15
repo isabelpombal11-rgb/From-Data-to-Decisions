@@ -69,3 +69,8 @@ Nearly all growth comes from **more buyers**. Customers aren't ordering much mor
 
 ## Skills demonstrated
 `LAG()` window function · `LAG(x, 12)` for year-over-year · MoM growth and CMGR · per-day normalisation with date functions · revenue decomposition (buyers × frequency × AOV) · new vs returning split · stacked bar chart · lever sizing with stated assumptions
+
+---
+
+## Extension
+[My follow-up analysis: average order value by category](my_analysis_aov_by_category.md). It checks whether flat AOV hides opposite moves between categories (it doesn't) and identifies AOV as an untapped growth lever.
