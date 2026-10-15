@@ -15,7 +15,7 @@ Every case folder contains:
 |---|---|---|---|---|
 | 01 | **[The Leaking Bucket](01_growth/cohort_retention)**<br>Customer retention by signup cohort | Do the customers we acquire keep coming back? | CTEs, date math, pivoting | ✅ |
 | 02 | **[The Abandoned Checkout](01_growth/funnel_conversion)**<br>Funnel conversion and mobile payment drop-off | Where do shoppers drop off before buying? | Conditional aggregation, segmentation | ✅ |
-| 03 | **Is Revenue Really Growing?**<br>Month-over-month and year-over-year growth | Is revenue growing, and how fast? | Window functions (LAG) | 🔜 |
+| 03 | **[Is Revenue Really Growing?](02_revenue/revenue_growth)**<br>Month-over-month and year-over-year growth | Is revenue growing, and how fast? | Window functions (LAG), revenue drivers | ✅ |
 | 04 | **Signal vs. Noise**<br>Running totals and moving averages | What's the underlying trend beneath daily noise? | Window frames | 🔜 |
 | 05 | **What Sells Where**<br>Top products in each category | What are the best sellers in each category? | ROW_NUMBER / RANK | 🔜 |
 | 06 | **Know Your Customers**<br>RFM segmentation: best, at-risk and lost customers | Who are our best, at-risk, and lost customers? | NTILE, segmentation | 🔜 |
