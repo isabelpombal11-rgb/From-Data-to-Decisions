@@ -7,6 +7,8 @@ Built-in "stories" the analyses should uncover:
   1. Paid Social users retain worse than Organic / Referral users.
   2. A new onboarding flow launched 2025-07-01 improves retention
      for cohorts from July onwards.
+  3. (sessions table) Mobile shoppers abandon at the payment step far
+     more than desktop shoppers: a checkout problem, not a demand problem.
 """
 import sqlite3, random
 from datetime import date, timedelta
@@ -65,5 +67,42 @@ CREATE TABLE orders (order_id INTEGER PRIMARY KEY, user_id INTEGER, order_date T
 cur.executemany("INSERT INTO users VALUES (?,?,?,?,?)", users)
 cur.executemany("INSERT INTO events VALUES (?,?,?)", events)
 cur.executemany("INSERT INTO orders VALUES (?,?,?,?,?)", orders)
+# ---------------------------------------------------------------
+# Sessions / checkout funnel (Case 02). Uses its own random
+# generator so the tables above are unchanged.
+# One row per session, with the furthest funnel step reached.
+# ---------------------------------------------------------------
+rng = random.Random(7)
+STEP_RATES = {  # probability of reaching the next step, given the previous one
+    "view_product": 0.62,
+    "add_to_cart":  0.32,
+    "checkout":     0.58,
+}
+PURCHASE_RATE = {"desktop": 0.72, "tablet": 0.64, "mobile": 0.39}  # checkout -> purchase
+DEVICE_MIX = {"mobile": 0.58, "desktop": 0.32, "tablet": 0.10}
+sessions = []
+sid = 1
+for (u_id, u_signup, u_channel, _country, _dev) in users:
+    for _ in range(rng.randint(2, 9)):
+        d = date.fromisoformat(u_signup) + timedelta(days=rng.randint(0, 120))
+        if d > END:
+            continue
+        dev = rng.choices(list(DEVICE_MIX), weights=DEVICE_MIX.values())[0]
+        step = "landing"
+        for nxt, rate in STEP_RATES.items():
+            if rng.random() < rate:
+                step = nxt
+            else:
+                break
+        if step == "checkout" and rng.random() < PURCHASE_RATE[dev]:
+            step = "purchase"
+        sessions.append((sid, u_id, d.isoformat(), dev, u_channel, step)); sid += 1
+
+cur.executescript("""
+DROP TABLE IF EXISTS sessions;
+CREATE TABLE sessions (session_id INTEGER PRIMARY KEY, user_id INTEGER, session_date TEXT,
+                       device TEXT, channel TEXT, furthest_step TEXT);
+""")
+cur.executemany("INSERT INTO sessions VALUES (?,?,?,?,?,?)", sessions)
 con.commit()
-print(f"users={len(users):,} events={len(events):,} orders={len(orders):,}")
+print(f"users={len(users):,} events={len(events):,} orders={len(orders):,} sessions={len(sessions):,}")

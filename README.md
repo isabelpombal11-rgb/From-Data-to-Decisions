@@ -5,24 +5,24 @@
 Each case follows the same path:
 **business question → SQL / Python → visualisation → business recommendation.**
 
-Every problem folder contains:
+Every case folder contains:
 - `question.md` — the business context, the stakeholders, and the definitions
 - `solution.sql` — the query, commented step by step
 - `insights.md` — findings, financial impact, caveats and recommendations
 
 ## Cases
-| # | Problem | Business question | Key skills | Status |
+| # | Case | Business question | Key skills | Status |
 |---|---|---|---|---|
-| 01 | [Cohort Retention](01_growth/cohort_retention) | Do the customers we acquire keep coming back? | CTEs, date math, pivoting | ✅ |
-| 02 | Funnel Conversion | Where do users drop off before buying? | Conditional aggregation | 🔜 |
-| 03 | MoM Revenue Growth | Is revenue growing, and how fast? | Window functions (LAG) | 🔜 |
-| 04 | Running Totals & Moving Averages | What's the underlying trend beneath daily noise? | Window frames | 🔜 |
-| 05 | Top-N per Group | What are the best sellers in each category? | ROW_NUMBER / RANK | 🔜 |
-| 06 | RFM Segmentation | Who are our best, at-risk, and lost customers? | NTILE, segmentation | 🔜 |
-| 07 | A/B Test Analysis | Did the change actually cause the improvement? | Statistics in Python | 🔜 |
-| 08 | Deduplication | Why are our totals wrong? | ROW_NUMBER, data quality | 🔜 |
-| 09 | Gaps & Islands | How long are customers' activity streaks? | Advanced window logic | 🔜 |
-| 10 | Production Decline Curves | How fast are our wells declining? | Energy domain, curve fitting | 🔜 |
+| 01 | **[The Leaking Bucket](01_growth/cohort_retention)**<br>Customer retention by signup cohort | Do the customers we acquire keep coming back? | CTEs, date math, pivoting | ✅ |
+| 02 | **[The Abandoned Checkout](01_growth/funnel_conversion)**<br>Funnel conversion and mobile payment drop-off | Where do shoppers drop off before buying? | Conditional aggregation, segmentation | ✅ |
+| 03 | **Is Revenue Really Growing?**<br>Month-over-month and year-over-year growth | Is revenue growing, and how fast? | Window functions (LAG) | 🔜 |
+| 04 | **Signal vs. Noise**<br>Running totals and moving averages | What's the underlying trend beneath daily noise? | Window frames | 🔜 |
+| 05 | **What Sells Where**<br>Top products in each category | What are the best sellers in each category? | ROW_NUMBER / RANK | 🔜 |
+| 06 | **Know Your Customers**<br>RFM segmentation: best, at-risk and lost customers | Who are our best, at-risk, and lost customers? | NTILE, segmentation | 🔜 |
+| 07 | **Did It Actually Work?**<br>A/B test analysis and statistical significance | Did the change actually cause the improvement? | Statistics in Python | 🔜 |
+| 08 | **Why Don't the Numbers Match?**<br>Finding and removing duplicate records | Why are our totals wrong? | ROW_NUMBER, data quality | 🔜 |
+| 09 | **Streaks and Gaps**<br>Customer activity streaks and inactive periods | How long are customers' activity streaks? | Advanced window logic | 🔜 |
+| 10 | **Running to Stand Still**<br>Oil well production decline curves | How fast are our wells declining? | Energy domain, curve fitting | 🔜 |
 
 ## Run it yourself
 ```bash
@@ -32,4 +32,4 @@ sqlite3 datasets/analytics.db < 01_growth/cohort_retention/solution.sql
 ```
 
 ## Dataset
-Synthetic, reproducible e-commerce data (2025): `users` (4.4k), `events` (47.6k), `orders` (10.9k).
+Synthetic, reproducible e-commerce data (2025): `users` (4.4k), `events` (47.6k), `orders` (10.9k), `sessions` (20.3k).

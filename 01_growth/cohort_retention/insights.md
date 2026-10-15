@@ -1,4 +1,4 @@
-# Problem 01 — Insights & Business Recommendations
+# Case 01 — The Leaking Bucket: Insights & Recommendations
 
 ![Retention heatmap](retention_heatmap.png)
 

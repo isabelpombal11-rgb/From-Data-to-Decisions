@@ -1,4 +1,5 @@
-# Problem 01 — Monthly Cohort Retention
+# Case 01 — The Leaking Bucket
+*Customer retention by signup cohort*
 
 ## The business question
 > "Of the customers we acquire each month, how many keep coming back — and is that getting better or worse?"

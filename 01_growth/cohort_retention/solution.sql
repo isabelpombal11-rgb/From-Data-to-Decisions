@@ -1,5 +1,5 @@
 -- =============================================================
--- Problem 01: Monthly Cohort Retention
+-- Case 01: The Leaking Bucket (customer retention by signup cohort)
 -- Question: Of the users who signed up in month X, what % are
 --           still active 1, 2, 3... months later?
 -- Dialect: SQLite (notes for PostgreSQL / BigQuery in README)
