@@ -86,3 +86,8 @@ Customers with the **same** number of orders get **different** scores, just to k
 
 ## Skills demonstrated
 RFM segmentation · `NTILE()` for quantile scores · `CASE WHEN` thresholds and segment rules · date arithmetic with `julianday()` · `SUM() OVER ()` for share of total · `LEFT JOIN` to include customers with no orders · spotting the NTILE ties problem · segment-to-action mapping · win-back sizing with stated assumptions
+
+---
+
+## Extension
+[My follow-up analysis: our 10 best customers](my_analysis_top_champions.md). It finds the top 10 Champions, shows that 6 of them came through Referral, and proposes a VIP programme with perks and referral invitations.
