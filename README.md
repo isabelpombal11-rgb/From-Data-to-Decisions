@@ -7,7 +7,7 @@ Each case follows the same path:
 
 Every case folder contains:
 - `question.md` — the business context, the stakeholders, and the definitions
-- `solution.sql` — the query, commented step by step
+- `solution.sql` — the query, commented step by step (Case 07 adds `analysis.py` for the statistics)
 - `insights.md` — findings, financial impact, caveats and recommendations
 
 ## Cases
@@ -19,7 +19,7 @@ Every case folder contains:
 | 04 | **[Signal vs. Noise](02_revenue/moving_averages)**<br>Running totals and moving averages | What's the underlying trend beneath daily noise? | Window frames, calendar tables | ✅ |
 | 05 | **[What Sells Where](03_products/top_products)**<br>Top products in each category | What are the best sellers in each category? | ROW_NUMBER, RANK, DENSE_RANK | ✅ |
 | 06 | **[Know Your Customers](04_customers/rfm_segmentation)**<br>RFM segmentation: best, at-risk and lost customers | Who are our best, at-risk, and lost customers? | NTILE, CASE segmentation | ✅ |
-| 07 | **Did It Actually Work?**<br>A/B test analysis and statistical significance | Did the change actually cause the improvement? | Statistics in Python | 🔜 |
+| 07 | **[Did It Actually Work?](05_experiments/ab_test)**<br>A/B test analysis and statistical significance | Did the change actually cause the improvement? | Hypothesis tests, confidence intervals, power (Python) | ✅ |
 | 08 | **Why Don't the Numbers Match?**<br>Finding and removing duplicate records | Why are our totals wrong? | ROW_NUMBER, data quality | 🔜 |
 | 09 | **Streaks and Gaps**<br>Customer activity streaks and inactive periods | How long are customers' activity streaks? | Advanced window logic | 🔜 |
 | 10 | **Running to Stand Still**<br>Oil well production decline curves | How fast are our wells declining? | Energy domain, curve fitting | 🔜 |
@@ -32,4 +32,4 @@ sqlite3 datasets/analytics.db < 01_growth/cohort_retention/solution.sql
 ```
 
 ## Dataset
-Synthetic, reproducible e-commerce data (2025): `users` (4.4k), `events` (47.6k), `orders` (10.9k), `sessions` (20.3k), `products` (36).
+Synthetic, reproducible e-commerce data (2025): `users` (4.4k), `events` (47.6k), `orders` (10.9k), `sessions` (20.3k), `products` (36), `ab_test` (42.4k visitors).

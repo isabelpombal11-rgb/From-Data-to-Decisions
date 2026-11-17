@@ -11,6 +11,8 @@ Built-in "stories" the analyses should uncover:
      more than desktop shoppers: a checkout problem, not a demand problem.
   4. (products) The best seller by number of orders is often not the
      best seller by revenue, and revenue is concentrated in a few products.
+  5. (ab_test) A 60 EUR free-delivery threshold raises basket size clearly,
+     but the effect on revenue per visitor is too small to prove.
 """
 import sqlite3, random
 from datetime import date, timedelta
@@ -145,5 +147,40 @@ CREATE TABLE sessions (session_id INTEGER PRIMARY KEY, user_id INTEGER, session_
                        device TEXT, channel TEXT, furthest_step TEXT);
 """)
 cur.executemany("INSERT INTO sessions VALUES (?,?,?,?,?,?)", sessions)
+
+# ---------------------------------------------------------------
+# A/B test (Case 07): free-delivery threshold.
+# Control: free delivery on orders of 80 EUR or more (current rule).
+# Treatment: free delivery on orders of 60 EUR or more.
+# 12 weeks, 1 Sep - 23 Nov 2025, visitors split 50/50 at random.
+# Uses its own random generators so nothing above changes.
+# ---------------------------------------------------------------
+xrng = random.Random(116)    # visitor behaviour
+drng = random.Random(2116)   # device labels
+ab_rows = []
+vid = 1
+for d in range(84):
+    day = date(2025, 9, 1) + timedelta(days=d)
+    for _ in range(xrng.randint(440, 560)):
+        variant = "treatment" if xrng.random() < 0.5 else "control"
+        converted = xrng.random() < (0.058 if variant == "treatment" else 0.060)
+        amount = None
+        if converted:
+            amount = xrng.lognormvariate(3.84, 0.58)
+            # with a 60 EUR threshold, many baskets between 35 and 60 get topped up
+            if variant == "treatment" and 35 <= amount < 60 and xrng.random() < 0.65:
+                amount = 60 + xrng.uniform(0, 15)
+            amount = round(amount, 2)
+        threshold = 60 if variant == "treatment" else 80
+        free_delivery = None if amount is None else int(amount >= threshold)
+        device = drng.choices(["mobile", "desktop", "tablet"], weights=[0.58, 0.32, 0.10])[0]
+        ab_rows.append((vid, day.isoformat(), variant, device, int(converted), amount, free_delivery)); vid += 1
+
+cur.executescript("""
+DROP TABLE IF EXISTS ab_test;
+CREATE TABLE ab_test (visitor_id INTEGER PRIMARY KEY, visit_date TEXT, variant TEXT, device TEXT,
+                      converted INTEGER, order_amount REAL, free_delivery INTEGER);
+""")
+cur.executemany("INSERT INTO ab_test VALUES (?,?,?,?,?,?,?)", ab_rows)
 con.commit()
-print(f"users={len(users):,} events={len(events):,} orders={len(orders):,} sessions={len(sessions):,} products={len(products)}")
+print(f"users={len(users):,} events={len(events):,} orders={len(orders):,} sessions={len(sessions):,} products={len(products)} ab_test={len(ab_rows):,}")
