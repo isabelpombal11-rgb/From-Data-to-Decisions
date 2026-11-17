@@ -63,3 +63,8 @@ The fix is the **calendar table** in Step 1 of `solution.sql`: generate every da
 
 ## Skills demonstrated
 Recursive CTE calendar table · `LEFT JOIN` + `COALESCE` for missing days · window frames (`ROWS BETWEEN n PRECEDING AND CURRENT ROW`) · running totals with `UNBOUNDED PRECEDING` · moving averages · hiding incomplete windows with `COUNT() OVER` · `LAG()` day-over-day comparison · noise measured as standard deviation · alert design
+
+---
+
+## Extension
+[My follow-up analysis: choosing an alert rule](my_analysis_alert_windows.md). It compares 3-day and 7-day windows and tests a "7-day more than 10% below 28-day" alert rule on 2025 data.
