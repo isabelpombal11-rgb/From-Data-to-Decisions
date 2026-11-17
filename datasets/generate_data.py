@@ -9,6 +9,8 @@ Built-in "stories" the analyses should uncover:
      for cohorts from July onwards.
   3. (sessions table) Mobile shoppers abandon at the payment step far
      more than desktop shoppers: a checkout problem, not a demand problem.
+  4. (products) The best seller by number of orders is often not the
+     best seller by revenue, and revenue is concentrated in a few products.
 """
 import sqlite3, random
 from datetime import date, timedelta
@@ -56,17 +58,56 @@ while day <= END:
         uid += 1
     day += timedelta(days=1)
 
+# ---------------------------------------------------------------
+# Products (Case 05). Each order is matched to one product in its
+# category, using its own random generator so nothing above changes.
+# A product is more likely when it is popular AND its price is close
+# to the order amount, so expensive orders go to expensive products.
+# ---------------------------------------------------------------
+import math
+prng = random.Random(11)
+PRODUCTS = {  # name: (price, popularity)
+    "Electronics": {"Wireless Earbuds": (79, 10), "Bluetooth Speaker": (99, 7), "Smartwatch": (159, 5),
+                    "USB-C Charger": (29, 9), "Noise-Cancelling Headphones": (189, 3), "Laptop Stand": (49, 4),
+                    "HD Webcam": (69, 3), "E-reader": (129, 4)},
+    "Home":        {"Scented Candle Set": (34, 8), "Linen Bedding Set": (89, 5), "Table Lamp": (59, 6),
+                    "Ceramic Dinner Set": (79, 4), "Throw Blanket": (45, 7), "Wall Mirror": (69, 3),
+                    "Storage Baskets": (29, 5), "Coffee Grinder": (55, 4)},
+    "Fashion":     {"Cotton T-shirt": (22, 10), "Denim Jacket": (69, 4), "Leather Belt": (35, 5),
+                    "Running Shoes": (85, 4), "Wool Scarf": (39, 6), "Summer Dress": (49, 6),
+                    "Canvas Tote Bag": (25, 7), "Sunglasses": (55, 4)},
+    "Books":       {"Bestseller Novel": (19, 10), "Cookbook": (28, 5), "Children's Picture Book": (14, 8),
+                    "Travel Guide": (22, 4), "Self-help Book": (17, 7), "Graphic Novel": (24, 4)},
+    "Beauty":      {"Face Moisturiser": (32, 9), "Lip Balm Set": (12, 8), "Hair Oil": (24, 5),
+                    "Perfume 50ml": (65, 3), "Sunscreen SPF50": (19, 7), "Makeup Brush Set": (39, 4)},
+}
+products, pid_of = [], {}
+pid = 1
+for cat, items in PRODUCTS.items():
+    for name, (price, _pop) in items.items():
+        products.append((pid, name, cat, price)); pid_of[(cat, name)] = pid; pid += 1
+
+def pick_product(cat, amount):
+    names = list(PRODUCTS[cat])
+    w = [PRODUCTS[cat][n][1] * math.exp(-((amount - PRODUCTS[cat][n][0]) / (0.35 * PRODUCTS[cat][n][0])) ** 2) + 1e-6
+         for n in names]
+    return pid_of[(cat, prng.choices(names, weights=w)[0])]
+
+orders = [o + (pick_product(o[4], o[3]),) for o in orders]
+
 con = sqlite3.connect("datasets/analytics.db")
 cur = con.cursor()
 cur.executescript("""
-DROP TABLE IF EXISTS users; DROP TABLE IF EXISTS events; DROP TABLE IF EXISTS orders;
+DROP TABLE IF EXISTS users; DROP TABLE IF EXISTS events; DROP TABLE IF EXISTS orders; DROP TABLE IF EXISTS products;
 CREATE TABLE users  (user_id INTEGER PRIMARY KEY, signup_date TEXT, channel TEXT, country TEXT, device TEXT);
 CREATE TABLE events (user_id INTEGER, event_date TEXT, event_type TEXT);
-CREATE TABLE orders (order_id INTEGER PRIMARY KEY, user_id INTEGER, order_date TEXT, amount REAL, category TEXT);
+CREATE TABLE orders (order_id INTEGER PRIMARY KEY, user_id INTEGER, order_date TEXT, amount REAL, category TEXT, product_id INTEGER);
+CREATE TABLE products (product_id INTEGER PRIMARY KEY, product_name TEXT, category TEXT, list_price REAL);
 """)
 cur.executemany("INSERT INTO users VALUES (?,?,?,?,?)", users)
 cur.executemany("INSERT INTO events VALUES (?,?,?)", events)
-cur.executemany("INSERT INTO orders VALUES (?,?,?,?,?)", orders)
+cur.executemany("INSERT INTO orders VALUES (?,?,?,?,?,?)", orders)
+cur.executemany("INSERT INTO products VALUES (?,?,?,?)", products)
 # ---------------------------------------------------------------
 # Sessions / checkout funnel (Case 02). Uses its own random
 # generator so the tables above are unchanged.
@@ -105,4 +146,4 @@ CREATE TABLE sessions (session_id INTEGER PRIMARY KEY, user_id INTEGER, session_
 """)
 cur.executemany("INSERT INTO sessions VALUES (?,?,?,?,?,?)", sessions)
 con.commit()
-print(f"users={len(users):,} events={len(events):,} orders={len(orders):,} sessions={len(sessions):,}")
+print(f"users={len(users):,} events={len(events):,} orders={len(orders):,} sessions={len(sessions):,} products={len(products)}")
