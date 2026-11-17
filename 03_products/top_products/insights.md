@@ -83,3 +83,8 @@ Interviewers ask about this difference constantly, so it's worth knowing by hear
 
 ## Skills demonstrated
 `ROW_NUMBER()`, `RANK()`, `DENSE_RANK()` · `PARTITION BY` to rank within groups · top-N per group with an outer filter · `SUM() OVER (PARTITION BY)` for share of group · multi-table `JOIN`s · comparing two rankings · concentration (Pareto) analysis · separating real differences from small-sample noise
+
+---
+
+## Extension
+[My follow-up analysis: the best-selling product in each country](my_analysis_top_product_by_country.md). It finds the Smartwatch is the top earner in all six countries, even where other products are ordered more often, and sizes the stock risk.
