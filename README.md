@@ -18,7 +18,7 @@ Every case folder contains:
 | 03 | **[Is Revenue Really Growing?](02_revenue/revenue_growth)**<br>Month-over-month and year-over-year growth | Is revenue growing, and how fast? | Window functions (LAG), revenue drivers | ✅ |
 | 04 | **[Signal vs. Noise](02_revenue/moving_averages)**<br>Running totals and moving averages | What's the underlying trend beneath daily noise? | Window frames, calendar tables | ✅ |
 | 05 | **[What Sells Where](03_products/top_products)**<br>Top products in each category | What are the best sellers in each category? | ROW_NUMBER, RANK, DENSE_RANK | ✅ |
-| 06 | **Know Your Customers**<br>RFM segmentation: best, at-risk and lost customers | Who are our best, at-risk, and lost customers? | NTILE, segmentation | 🔜 |
+| 06 | **[Know Your Customers](04_customers/rfm_segmentation)**<br>RFM segmentation: best, at-risk and lost customers | Who are our best, at-risk, and lost customers? | NTILE, CASE segmentation | ✅ |
 | 07 | **Did It Actually Work?**<br>A/B test analysis and statistical significance | Did the change actually cause the improvement? | Statistics in Python | 🔜 |
 | 08 | **Why Don't the Numbers Match?**<br>Finding and removing duplicate records | Why are our totals wrong? | ROW_NUMBER, data quality | 🔜 |
 | 09 | **Streaks and Gaps**<br>Customer activity streaks and inactive periods | How long are customers' activity streaks? | Advanced window logic | 🔜 |
